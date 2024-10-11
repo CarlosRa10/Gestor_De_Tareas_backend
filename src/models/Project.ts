@@ -9,4 +9,30 @@ export type ProjectType = Document & {
     clientName: string
     description: string
 }
-//definir el Schema - modelo para mongoose - son dos cosas el tyoe y el mongoose
+
+
+//definir el Schema - modelo para mongoose - son dos cosas el type y el mongoose
+//el required hace que sea obligatorio esa validacion - spred validator tambien sirve para validar pero aqui tambien podemos
+const ProjectSchema: Schema = new Schema({
+    projectName:{
+        type: String,
+        require: true,
+        trim: true
+    },
+    clientName:{
+        type: String,
+        require: true,
+        trim: true
+    },
+    description:{
+        type: String,
+        require: true,
+        trim: true
+    },
+})
+
+
+//Para conectarse-- definimos nuestro modelo y se registra en la instancia de mongoose
+// con el metodo model estamos agregando un modelo a la instancia de momgoose
+const Project = mongoose.model<ProjectType>('Project', ProjectSchema)
+export default Project
