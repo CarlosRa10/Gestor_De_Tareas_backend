@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
-import colors from 'colors'
-import { exit } from 'node:process';
+import mongoose from 'mongoose'// Librería para conectarse y trabajar con MongoDB.
+import colors from 'colors'//Librería para dar color a las salidas en la consola, mejorando la legibilidad.
+import { exit } from 'node:process';//exit: Función de node:process que permite salir del proceso en caso de error.
 
 export const connectDB = async()=>{
     try {
