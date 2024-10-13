@@ -1,5 +1,6 @@
 import type {Request, Response} from 'express'
 import Project from '../models/Project'
+import { error } from 'node:console'
 
 // un metodo estatico no requiere ser instanciado -class ProjectController tiene un getAllProjects en este caso seria un metodo
 
@@ -17,6 +18,30 @@ export class ProjectController {
     }
 
     static getAllProjects = async (req: Request, res: Response) => {
-        res.send('Todos los proyectos')
+        try {
+            const projects = await Project.find({})
+            res.json(projects)//como es una colección con multiples elementos lo retornamos como json
+        } catch (error) {
+            console.log(error)
+        }
+        //res.send('Todos los proyectos')
+    }
+    
+    static getProjectById = async (req: Request, res: Response): Promise<void> => {
+        const {id} = req.params
+        try {
+            const project = await  Project.findById(id)
+ 
+            if(!project){
+                const error= new Error('Proyecto no encontrado')//si quieres no se pone este codigo y solo el de abajo con esto ---res.status(404).json({ error: 'Proyecto no encontrado' });
+                res.status(400).json({error: error.message})
+                return//// Solo si quieres salir después de enviar la respuesta
+            }
+            res.json(project)// Enviar la respuesta pero no devolverla
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'Server Error' }); // Asegurarse de manejar el error con un mensaje
+        }
     }
 }
+
