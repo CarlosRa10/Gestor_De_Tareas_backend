@@ -23,6 +23,7 @@ import { handleInputErrors } from "../middleware/validation";
 const router = Router()
 //cuando se llama o abre projectRoutes cual es el metodo mandado a llamar -puedes tener varios metodos
 //manda a lammar el controldor y el metodo asociado a esa url
+//crear
 router.post('/',
     //Podemos hacer validacion en controladores pero vamos a dejarlo quieto para que solo tenga 1 accion
     body('projectName')
@@ -38,9 +39,26 @@ router.post('/',
 router.get('/',ProjectController.getAllProjects)
 
 //routing dinamico '/:id-- Routing dinamico, conocido como comodin para las URL
+//obtener proyecto por id
 router.get('/:id',//Este fragmento de código define una ruta GET en un router de Express.js.--/:id indica que la ruta espera un parámetro de URL llamado id. Este parámetro representa el identificador de un proyecto
     param('id').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
     handleInputErrors,
     ProjectController.getProjectById)
+//actualizar
+router.put('/:id',//Este fragmento de código define una ruta GET en un router de Express.js.--/:id indica que la ruta espera un parámetro de URL llamado id. Este parámetro representa el identificador de un proyecto
+    param('id').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
+    body('projectName')
+        .trim().notEmpty().withMessage('El Nombre del Proyecto es Obligatorio'),
+    body('clientName')
+        .trim().notEmpty().withMessage('El Nombre del Cliente es Obligatorio'),
+    body('description')
+        .trim().notEmpty().withMessage('La Descripción del Proyecto es Obligatoria'),
+    handleInputErrors,
+    ProjectController.updateProject)
 
+//Eliminar
+router.delete('/:id',//Este fragmento de código define una ruta GET en un router de Express.js.--/:id indica que la ruta espera un parámetro de URL llamado id. Este parámetro representa el identificador de un proyecto
+    param('id').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
+    handleInputErrors,
+    ProjectController.deleteProject)
 export default router
