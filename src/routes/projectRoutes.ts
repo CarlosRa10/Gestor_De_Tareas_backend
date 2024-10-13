@@ -19,7 +19,9 @@ import { Router } from "express";
 import { ProjectController } from "../controllers/ProjectController";
 
 const router = Router()
-
+//cuando se llama o abre projectRoutes cual es el metodo mandado a llamar -puedes tener varios metodos
+//manda a lammar el controldor y el metodo asociado a esa url
+router.post('/',ProjectController.createProjects)
 router.get('/',ProjectController.getAllProjects)
 
 export default router
