@@ -16,12 +16,23 @@
 // El usuario accede a la URL y el router ya tiene indicaciones de como comunicarse con un controlador especifico, ese controlador ya sabe que modelo va a llamar y que vista va a ejecutar
 
 import { Router } from "express";
+import {body} from 'express-validator'//body es la funcion que nos permite leer ciertos parámetros que le enviamos a Request.body
 import { ProjectController } from "../controllers/ProjectController";
+import { handleInputErrors } from "../middleware/validation";
 
 const router = Router()
 //cuando se llama o abre projectRoutes cual es el metodo mandado a llamar -puedes tener varios metodos
 //manda a lammar el controldor y el metodo asociado a esa url
-router.post('/',ProjectController.createProjects)
+router.post('/',
+    //Podemos hacer validacion en controladores pero vamos a dejarlo quieto para que solo tenga 1 accion
+    body('projectName')
+        .trim().notEmpty().withMessage('El Nombre del Proyecto es Obligatorio'),
+    body('clientName')
+        .trim().notEmpty().withMessage('El Nombre del Cliente es Obligatorio'),
+    body('description')
+        .trim().notEmpty().withMessage('La Descripción del Proyecto es Obligatoria'),
+    handleInputErrors,
+    ProjectController.createProjects)
 router.get('/',ProjectController.getAllProjects)
 
 export default router
