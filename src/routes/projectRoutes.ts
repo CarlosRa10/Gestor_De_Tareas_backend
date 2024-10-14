@@ -19,6 +19,7 @@ import { Router } from "express";
 import {body,param} from 'express-validator'//body es la funcion que nos permite leer ciertos parámetros que le enviamos a Request.body
 import { ProjectController } from "../controllers/ProjectController";
 import { handleInputErrors } from "../middleware/validation";
+import { TaskController } from "../controllers/TaskController";
 
 const router = Router()
 //cuando se llama o abre projectRoutes cual es el metodo mandado a llamar -puedes tener varios metodos
@@ -61,4 +62,13 @@ router.delete('/:id',//Este fragmento de código define una ruta GET en un route
     param('id').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
     handleInputErrors,
     ProjectController.deleteProject)
+
+
+
+// Routes o Rutas para las tareas o Tasks
+//ejemplo de como queda /api/projects/135561315/tasks - es información que esta relacionada
+router.post('/:projectId/tasks',//peticion hacia esta url
+    TaskController.createProjects
+)
+
 export default router
