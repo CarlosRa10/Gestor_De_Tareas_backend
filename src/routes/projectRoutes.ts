@@ -68,7 +68,7 @@ router.delete('/:id',//Este fragmento de código define una ruta GET en un route
 // Routes o Rutas para las tareas o Tasks
 //ejemplo de como queda /api/projects/135561315/tasks - es información que esta relacionada
 router.post('/:projectId/tasks',//peticion hacia esta url
-    TaskController.createProjects
+    TaskController.createTask
 )
 
 export default router
