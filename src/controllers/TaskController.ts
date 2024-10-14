@@ -17,7 +17,7 @@ export class TaskController{
         try {
             const task = new Task(req.body)//con lo que le pasamos, se crea la instancia de tarea, es decir nombre y descripcion
             //console.log(task)
-            task.project = project.id//despues que validamos si el proyecto existe con el codigo que esta arriba le asignamos el rpoyecto al cual pertenece esta tarea
+            task.project = project.id//despues que validamos si el proyecto existe con el codigo que esta arriba le asignamos el proyecto al cual pertenece esta tarea
             project.tasks.push(task.id)
             await task.save()
             await project.save()

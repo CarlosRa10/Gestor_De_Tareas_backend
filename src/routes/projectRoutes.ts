@@ -67,7 +67,10 @@ router.delete('/:id',//Este fragmento de código define una ruta GET en un route
 
 // Routes o Rutas para las tareas o Tasks
 //ejemplo de como queda /api/projects/135561315/tasks - es información que esta relacionada
-router.post('/:projectId/tasks',//peticion hacia esta url
+//:projectId: Es un parámetro de ruta dinámico. Esto significa que cualquier valor que se coloque en este lugar de la URL será capturado y asignado a la variable projectId dentro de la función del controlador. 
+//Por ejemplo, si la solicitud se hace a la URL /projects/670b3ba6a1600dbfe49e67ce/tasks, el valor 670b3ba6a1600dbfe49e67ce será asignado a projectId.
+//tasks: Indica que se está trabajando con el recurso "tareas" dentro del contexto de un proyecto específico.
+router.post('/:projectId/tasks',//peticion hacia esta url--- La clave está en la estructura de la ruta de la solicitud. Al incluir :projectId en la ruta, se indica al framework que ese valor será extraído y colocado en el objeto req.params.
     TaskController.createTask
 )
 
