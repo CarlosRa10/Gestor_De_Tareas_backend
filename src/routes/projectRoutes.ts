@@ -73,7 +73,17 @@ router.delete('/:id',//Este fragmento de código define una ruta GET en un route
 //tasks: Indica que se está trabajando con el recurso "tareas" dentro del contexto de un proyecto específico.
 router.post('/:projectId/tasks',//peticion hacia esta url--- La clave está en la estructura de la ruta de la solicitud. Al incluir :projectId en la ruta, se indica al framework que ese valor será extraído y colocado en el objeto req.params.
     validateProjectExists,
+    body('name')
+        .trim().notEmpty().withMessage('El Nombre de la tarea es Obligatorio'),
+    body('description')
+        .trim().notEmpty().withMessage('La descripción de la tarea es Obligatoria'),
+    handleInputErrors,
     TaskController.createTask
+)
+
+router.get('/:projectId/tasks',
+    validateProjectExists,
+    TaskController.getProjectTasks
 )
 
 //Nested Resource Routing-Enrutamiento de Recursos Anidados

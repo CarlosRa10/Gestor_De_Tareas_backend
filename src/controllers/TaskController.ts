@@ -13,7 +13,18 @@ export class TaskController{
             await Promise.allSettled([task.save(), req.project.save()]) //es un codigo que se ejecuta si todos los promises se cumple- si no te da errores 
             res.send('Tarea creada correctamente')
         } catch (error) {
-            console.log(error)
+            res.status(500).json({ error: 'Server Error' });
+        }
+     
+    }
+
+    static getProjectTasks = async (req: Request, res: Response) => {
+        
+        try {
+            const tasks = await Task.find({project:req.project.id})
+            res.json(tasks)
+        } catch (error) {
+            res.status(500).json({ error: 'Server Error' });
         }
      
     }
