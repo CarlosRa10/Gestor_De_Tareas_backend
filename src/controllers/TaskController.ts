@@ -10,8 +10,7 @@ export class TaskController{
             //console.log(task)
             task.project = req.project.id//despues que validamos si el proyecto existe con el codigo que esta arriba le asignamos el proyecto al cual pertenece esta tarea
             req.project.tasks.push(task.id)
-            await task.save()
-            await req.project.save()
+            await Promise.allSettled([task.save(), req.project.save()]) //es un codigo que se ejecuta si todos los promises se cumple- si no te da errores 
             res.send('Tarea creada correctamente')
         } catch (error) {
             console.log(error)
