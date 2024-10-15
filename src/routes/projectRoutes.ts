@@ -20,6 +20,7 @@ import {body,param} from 'express-validator'//body es la funcion que nos permite
 import { ProjectController } from "../controllers/ProjectController";
 import { handleInputErrors } from "../middleware/validation";
 import { TaskController } from "../controllers/TaskController";
+import { validateProjectExists } from "../middleware/project";
 
 const router = Router()
 //cuando se llama o abre projectRoutes cual es el metodo mandado a llamar -puedes tener varios metodos
@@ -71,7 +72,20 @@ router.delete('/:id',//Este fragmento de código define una ruta GET en un route
 //Por ejemplo, si la solicitud se hace a la URL /projects/670b3ba6a1600dbfe49e67ce/tasks, el valor 670b3ba6a1600dbfe49e67ce será asignado a projectId.
 //tasks: Indica que se está trabajando con el recurso "tareas" dentro del contexto de un proyecto específico.
 router.post('/:projectId/tasks',//peticion hacia esta url--- La clave está en la estructura de la ruta de la solicitud. Al incluir :projectId en la ruta, se indica al framework que ese valor será extraído y colocado en el objeto req.params.
+    validateProjectExists,
     TaskController.createTask
 )
 
+//Nested Resource Routing-Enrutamiento de Recursos Anidados
+//Es un patrón de diseño en la construccion de URLs para APIs, especialmente en APIs RESTful, donde las relaciones jerárquicas entre recursos son expresadas en la estructura de la URL. 
+//Este patrón es muy común en las aplicaciones web y moviles que manejan datos relacionados en forma de recursos. 
+//Ventajas- /project/:projectId/tasks - 
+//  revisar si el proyecto existe
+//  Si el usuario tiene permisos
+//  Crear tareas en ese proyecto
+//simplifica tener tantas validaciones
+//Middleware- forma de implementarlo
+//  un Middleware nos va a permitir darle un mejor orden a nuestras rutas para aplicar este patrón de diseño para las URL's
+//  Debido a que los Middleware se ejecutan en las peticiones HTTP y antes del controlador, los hacen un gran lugar para poder ejecutar ciertas acciones referentes a si los 
+//  proyectos existen o si el usuario tiene permisos para acceder a él.
 export default router
