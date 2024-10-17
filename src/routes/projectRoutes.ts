@@ -67,12 +67,15 @@ router.delete('/:id',//Este fragmento de código define una ruta GET en un route
 
 
 // Routes o Rutas para las tareas o Tasks
+
+
 //ejemplo de como queda /api/projects/135561315/tasks - es información que esta relacionada
 //:projectId: Es un parámetro de ruta dinámico. Esto significa que cualquier valor que se coloque en este lugar de la URL será capturado y asignado a la variable projectId dentro de la función del controlador. 
 //Por ejemplo, si la solicitud se hace a la URL /projects/670b3ba6a1600dbfe49e67ce/tasks, el valor 670b3ba6a1600dbfe49e67ce será asignado a projectId.
 //tasks: Indica que se está trabajando con el recurso "tareas" dentro del contexto de un proyecto específico.
+
+router.param('projectId',validateProjectExists)//toma el nombre del parametro t de segundo un handle o funcion que se encarga de procesar siempre que exista el primer parametro 
 router.post('/:projectId/tasks',//peticion hacia esta url--- La clave está en la estructura de la ruta de la solicitud. Al incluir :projectId en la ruta, se indica al framework que ese valor será extraído y colocado en el objeto req.params.
-    validateProjectExists,
     body('name')
         .trim().notEmpty().withMessage('El Nombre de la tarea es Obligatorio'),
     body('description')
@@ -82,16 +85,26 @@ router.post('/:projectId/tasks',//peticion hacia esta url--- La clave está en l
 )
 
 router.get('/:projectId/tasks',
-    validateProjectExists,
     TaskController.getProjectTasks
 )
 
 
-router.get('/:projectId/tasks/:taskId',
-    validateProjectExists,
+router.get('/:projectId/tasks/:taskId',// estos 3 endpoint tiene como parametro el proyecto y se valida de que el proyecto exista 
+    param('taskId').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
+    handleInputErrors,
     TaskController.getTaskById
 )
 
+
+router.put('/:projectId/tasks/:taskId',
+    param('taskId').isMongoId().withMessage('ID no válido'),
+    body('name')
+        .trim().notEmpty().withMessage('El Nombre de la tarea es Obligatorio'),
+    body('description')
+        .trim().notEmpty().withMessage('La descripción de la tarea es Obligatoria'),
+    handleInputErrors,
+    TaskController.updateTask
+)
 
 //Nested Resource Routing-Enrutamiento de Recursos Anidados
 //Es un patrón de diseño en la construccion de URLs para APIs, especialmente en APIs RESTful, donde las relaciones jerárquicas entre recursos son expresadas en la estructura de la URL. 
