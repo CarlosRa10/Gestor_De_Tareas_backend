@@ -86,6 +86,13 @@ router.get('/:projectId/tasks',
     TaskController.getProjectTasks
 )
 
+
+router.get('/:projectId/tasks/:taskId',
+    validateProjectExists,
+    TaskController.getTaskById
+)
+
+
 //Nested Resource Routing-Enrutamiento de Recursos Anidados
 //Es un patrón de diseño en la construccion de URLs para APIs, especialmente en APIs RESTful, donde las relaciones jerárquicas entre recursos son expresadas en la estructura de la URL. 
 //Este patrón es muy común en las aplicaciones web y moviles que manejan datos relacionados en forma de recursos. 
