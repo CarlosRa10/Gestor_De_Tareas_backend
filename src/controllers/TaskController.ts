@@ -60,7 +60,7 @@ export class TaskController{
         
         try {
             const {taskId} = req.params
-            const task = await Task.findByIdAndUpdate(taskId,req.body)
+            const task = await Task.findById(taskId)
             if(!task){
                 const error = new Error('Tarea no encontrada')
                 res.status(404).json({error:error.message})//cuando algo no se encuentra es un 404  
@@ -75,7 +75,34 @@ export class TaskController{
                 res.status(400).json({error:error.message})//400 Peticion mala
                 return
             }
+            task.name = req.body.name
+            task.description = req.body.description
+            await task.save()
             res.send("Tarea Actualizada Correctamente")
+        } catch (error) {
+            res.status(500).json({ error: 'Server Error' });
+        }
+     
+    }
+
+
+    static deleteTask = async (req: Request, res: Response) => {
+        
+        try {
+            const {taskId} = req.params
+            const task = await Task.findById(taskId,req.body)
+            if(!task){
+                const error = new Error('Tarea no encontrada')
+                res.status(404).json({error:error.message})//cuando algo no se encuentra es un 404  
+                return
+            }
+            
+            req.project.tasks = req.project.tasks.filter(task => task.toString() !== taskId)
+
+            // await task.deleteOne()
+            // await req.project.save()
+            await Promise.allSettled([task.deleteOne(),req.project.save()])
+            res.send("Tarea Eliminada Correctamente")
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
         }

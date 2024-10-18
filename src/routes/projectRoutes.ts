@@ -106,6 +106,13 @@ router.put('/:projectId/tasks/:taskId',
     TaskController.updateTask
 )
 
+
+router.delete('/:projectId/tasks/:taskId',
+    param('taskId').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
+    handleInputErrors,
+    TaskController.deleteTask
+)
+
 //Nested Resource Routing-Enrutamiento de Recursos Anidados
 //Es un patrón de diseño en la construccion de URLs para APIs, especialmente en APIs RESTful, donde las relaciones jerárquicas entre recursos son expresadas en la estructura de la URL. 
 //Este patrón es muy común en las aplicaciones web y moviles que manejan datos relacionados en forma de recursos. 
