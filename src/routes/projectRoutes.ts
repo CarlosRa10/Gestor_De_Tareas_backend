@@ -113,6 +113,15 @@ router.delete('/:projectId/tasks/:taskId',
     TaskController.deleteTask
 )
 
+
+router.post('/:projectId/tasks/:taskId/status',
+    param('taskId').isMongoId().withMessage('ID no válido'),//validacion de taskid
+    body('status')
+        .notEmpty().withMessage('El estado es obligatorio'),
+    handleInputErrors,
+    TaskController.updateStatus
+)
+
 //Nested Resource Routing-Enrutamiento de Recursos Anidados
 //Es un patrón de diseño en la construccion de URLs para APIs, especialmente en APIs RESTful, donde las relaciones jerárquicas entre recursos son expresadas en la estructura de la URL. 
 //Este patrón es muy común en las aplicaciones web y moviles que manejan datos relacionados en forma de recursos. 

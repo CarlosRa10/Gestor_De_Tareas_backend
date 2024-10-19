@@ -37,7 +37,7 @@ export const TaskSchema : Schema = new Schema({
     status:{
         type: String,
         enum: Object.values(taskStatus),
-        default: taskStatus.PENDING
+        default: taskStatus.PENDING//cuando creamos la tarea, le creamos un estado de pendiente. porque recien creada es mentira que alguien hizo la tarea
     }
 
 },{timestamps:true})//timestamps-registra cuando fue la ultima actualización
