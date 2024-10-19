@@ -32,23 +32,17 @@ export class TaskController{
     static getTaskById = async (req: Request, res: Response) => {
         
         try {
-            const {taskId} = req.params
-            const task = await Task.findById(taskId)
-            if(!task){
-                const error = new Error('Tarea no encontrada')
-                res.status(404).json({error:error.message})//cuando algo no se encuentra es un 404  
-                return
-            }
+            
             //Siempre que trabajemos con los ID de mongoDB asegurarnos de convertirlo a string, porque el new object ID siempre dara un valor diferente, es como si fuera un objeto  
             //console.log(task.project.toString())
             //console.log(req.project.id)
             //task.project: Este valor, al ser obtenido de una base de datos (presumiblemente MongoDB), a menudo es un objeto de tipo ObjectId. Un ObjectId es un tipo de dato especial en MongoDB que representa un identificador único para un documento.
-            if(task.project.toString() !== req.project.id){
+            if(req.task.project.toString() !== req.project.id){
                 const error = new Error('Accion no válida')
                 res.status(400).json({error:error.message})//400 Peticion mala
                 return
             }
-            res.json(task)
+            res.json(req.task)
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
         }
@@ -59,25 +53,18 @@ export class TaskController{
     static updateTask = async (req: Request, res: Response) => {
         
         try {
-            const {taskId} = req.params
-            const task = await Task.findById(taskId)
-            if(!task){
-                const error = new Error('Tarea no encontrada')
-                res.status(404).json({error:error.message})//cuando algo no se encuentra es un 404  
-                return
-            }
             //Siempre que trabajemos con los ID de mongoDB asegurarnos de convertirlo a string, porque el new object ID siempre dara un valor diferente, es como si fuera un objeto  
             //console.log(task.project.toString())
             //console.log(req.project.id)
             //task.project: Este valor, al ser obtenido de una base de datos (presumiblemente MongoDB), a menudo es un objeto de tipo ObjectId. Un ObjectId es un tipo de dato especial en MongoDB que representa un identificador único para un documento.
-            if(task.project.toString() !== req.project.id){
+            if(req.task.project.toString() !== req.project.id){
                 const error = new Error('Accion no válida')
                 res.status(400).json({error:error.message})//400 Peticion mala
                 return
             }
-            task.name = req.body.name
-            task.description = req.body.description
-            await task.save()
+            req.task.name = req.body.name
+            req.task.description = req.body.description
+            await req.task.save()
             res.send("Tarea Actualizada Correctamente")
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
@@ -89,19 +76,10 @@ export class TaskController{
     static deleteTask = async (req: Request, res: Response) => {
         
         try {
-            const {taskId} = req.params
-            const task = await Task.findById(taskId)
-            if(!task){
-                const error = new Error('Tarea no encontrada')
-                res.status(404).json({error:error.message})//cuando algo no se encuentra es un 404  
-                return
-            }
-            
-            req.project.tasks = req.project.tasks.filter(task => task.toString() !== taskId)
-
+            req.project.tasks = req.project.tasks.filter(task => task.toString() !== req.task.id.toString())
             // await task.deleteOne()
             // await req.project.save()
-            await Promise.allSettled([task.deleteOne(),req.project.save()])
+            await Promise.allSettled([req.task.deleteOne(),req.project.save()])
             res.send("Tarea Eliminada Correctamente")
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
@@ -113,18 +91,10 @@ export class TaskController{
     static updateStatus = async (req: Request, res: Response) => {
         
         try {
-            //Revisamos la tarea
-            const {taskId} = req.params
-            const task = await Task.findById(taskId)
-            if(!task){
-                const error = new Error('Tarea no encontrada')
-                res.status(404).json({error:error.message})//cuando algo no se encuentra es un 404  
-                return
-            }
             //Revisamos el estado
             const {status} = req.body
-            task.status = status
-            await task.save()
+            req.task.status = status
+            await req.task.save()
             res.send('Tarea Actualizada')
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
