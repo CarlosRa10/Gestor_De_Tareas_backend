@@ -21,7 +21,7 @@ import { ProjectController } from "../controllers/ProjectController";
 import { handleInputErrors } from "../middleware/validation";
 import { TaskController } from "../controllers/TaskController";
 import { projectExists } from "../middleware/project";
-import { taskExists } from "../middleware/task";
+import { taskBelongsToProject, taskExists } from "../middleware/task";
 
 const router = Router()
 //cuando se llama o abre projectRoutes cual es el metodo mandado a llamar -puedes tener varios metodos
@@ -90,7 +90,7 @@ router.get('/:projectId/tasks',
 )
 
 router.param('taskId', taskExists)// en las rutas donde hay un taskId, que remos ejecutar el segundo parametro o siguiente handle
-
+router.param('taskId', taskBelongsToProject)
 router.get('/:projectId/tasks/:taskId',// estos 3 endpoint tiene como parametro el proyecto y se valida de que el proyecto exista 
     param('taskId').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
     handleInputErrors,

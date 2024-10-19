@@ -32,16 +32,6 @@ export class TaskController{
     static getTaskById = async (req: Request, res: Response) => {
         
         try {
-            
-            //Siempre que trabajemos con los ID de mongoDB asegurarnos de convertirlo a string, porque el new object ID siempre dara un valor diferente, es como si fuera un objeto  
-            //console.log(task.project.toString())
-            //console.log(req.project.id)
-            //task.project: Este valor, al ser obtenido de una base de datos (presumiblemente MongoDB), a menudo es un objeto de tipo ObjectId. Un ObjectId es un tipo de dato especial en MongoDB que representa un identificador único para un documento.
-            if(req.task.project.toString() !== req.project.id){
-                const error = new Error('Accion no válida')
-                res.status(400).json({error:error.message})//400 Peticion mala
-                return
-            }
             res.json(req.task)
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
@@ -53,15 +43,6 @@ export class TaskController{
     static updateTask = async (req: Request, res: Response) => {
         
         try {
-            //Siempre que trabajemos con los ID de mongoDB asegurarnos de convertirlo a string, porque el new object ID siempre dara un valor diferente, es como si fuera un objeto  
-            //console.log(task.project.toString())
-            //console.log(req.project.id)
-            //task.project: Este valor, al ser obtenido de una base de datos (presumiblemente MongoDB), a menudo es un objeto de tipo ObjectId. Un ObjectId es un tipo de dato especial en MongoDB que representa un identificador único para un documento.
-            if(req.task.project.toString() !== req.project.id){
-                const error = new Error('Accion no válida')
-                res.status(400).json({error:error.message})//400 Peticion mala
-                return
-            }
             req.task.name = req.body.name
             req.task.description = req.body.description
             await req.task.save()
