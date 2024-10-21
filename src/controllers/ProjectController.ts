@@ -48,12 +48,15 @@ export class ProjectController {
     static updateProject = async (req: Request, res: Response): Promise<void> => {
         const {id} = req.params
         try {
-            const project = await  Project.findByIdAndUpdate(id,req.body)//toma como segundo parametro req.body, es decir lo que le estmos pasando el json que se ve en thunderClient y en automatico va a suscribir el registro y lo guardamos
+            const project = await  Project.findById(id)//toma como segundo parametro req.body, es decir lo que le estmos pasando el json que se ve en thunderClient y en automatico va a suscribir el registro y lo guardamos
             if(!project){
                 const error= new Error('Proyecto no encontrado')//si quieres no se pone este codigo y solo el de abajo con esto ---res.status(404).json({ error: 'Proyecto no encontrado' });
                 res.status(400).json({error: error.message})
                 return//// Solo si quieres salir después de enviar la respuesta
             }
+            project.projectName = req.body.projectName
+            project.clientName = req.body.clientName
+            project.description = req.body.description
             await project.save()
             res.send('Proyecto Actualizado')
         } catch (error) {

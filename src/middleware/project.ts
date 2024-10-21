@@ -12,7 +12,7 @@ declare global {
     }
 }
 
-export async function validateProjectExists(req:Request,res:Response,next:NextFunction) {
+export async function projectExists(req:Request,res:Response,next:NextFunction) {
     try {
         //const projectId = req.params --- resultado de console.log { projectId: '670b3ba6a1600dbfe49e67ce' }-- si lo desestructuramos solo obtenemos el valor
         const {projectId} = req.params

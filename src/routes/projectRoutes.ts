@@ -20,7 +20,8 @@ import {body,param} from 'express-validator'//body es la funcion que nos permite
 import { ProjectController } from "../controllers/ProjectController";
 import { handleInputErrors } from "../middleware/validation";
 import { TaskController } from "../controllers/TaskController";
-import { validateProjectExists } from "../middleware/project";
+import { projectExists } from "../middleware/project";
+import { taskBelongsToProject, taskExists } from "../middleware/task";
 
 const router = Router()
 //cuando se llama o abre projectRoutes cual es el metodo mandado a llamar -puedes tener varios metodos
@@ -74,7 +75,7 @@ router.delete('/:id',//Este fragmento de código define una ruta GET en un route
 //Por ejemplo, si la solicitud se hace a la URL /projects/670b3ba6a1600dbfe49e67ce/tasks, el valor 670b3ba6a1600dbfe49e67ce será asignado a projectId.
 //tasks: Indica que se está trabajando con el recurso "tareas" dentro del contexto de un proyecto específico.
 
-router.param('projectId',validateProjectExists)//toma el nombre del parametro t de segundo un handle o funcion que se encarga de procesar siempre que exista el primer parametro 
+router.param('projectId',projectExists)//toma el nombre del parametro y de segundo un handle o funcion que se encarga de procesar siempre que exista el primer parametro 
 router.post('/:projectId/tasks',//peticion hacia esta url--- La clave está en la estructura de la ruta de la solicitud. Al incluir :projectId en la ruta, se indica al framework que ese valor será extraído y colocado en el objeto req.params.
     body('name')
         .trim().notEmpty().withMessage('El Nombre de la tarea es Obligatorio'),
@@ -88,7 +89,8 @@ router.get('/:projectId/tasks',
     TaskController.getProjectTasks
 )
 
-
+router.param('taskId', taskExists)// en las rutas donde hay un taskId, que remos ejecutar el segundo parametro o siguiente handle
+router.param('taskId', taskBelongsToProject)
 router.get('/:projectId/tasks/:taskId',// estos 3 endpoint tiene como parametro el proyecto y se valida de que el proyecto exista 
     param('taskId').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
     handleInputErrors,
@@ -111,6 +113,15 @@ router.delete('/:projectId/tasks/:taskId',
     param('taskId').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
     handleInputErrors,
     TaskController.deleteTask
+)
+
+
+router.post('/:projectId/tasks/:taskId/status',
+    param('taskId').isMongoId().withMessage('ID no válido'),//validacion de taskid
+    body('status')
+        .notEmpty().withMessage('El estado es obligatorio'),
+    handleInputErrors,
+    TaskController.updateStatus
 )
 
 //Nested Resource Routing-Enrutamiento de Recursos Anidados
