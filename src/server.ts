@@ -6,7 +6,7 @@ import cors from 'cors'
 import { corsConfig } from './config/cors';
 import { connectDB } from './config/db';// Importa la función de conexión a la base de datos desde db.ts.
 import projectRoutes from './routes/projectRoutes'
-import router from './routes/projectRoutes';
+//import router from './routes/projectRoutes';
 
 dotenv.config()
 
