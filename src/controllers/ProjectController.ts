@@ -10,6 +10,14 @@ export class ProjectController {
         //este es un metododo - const project = new Project(req.body) try { await project.save(req.body) que es igual a esto await Project.create(req.body) pero no puedes hacer tantas validaciones
         const project = new Project(req.body)
 
+        // if(true){
+        //     //cuando los llamados son correctos, la respuesta estan en data, pero cuando hay errores estan en response(axios), luego data(axios) y despues error que seria json({error: error.message})
+        //     //cuando yo genero error o un mensaje con new Error ese mensaje siempre va a estar en ese .message
+        //     const error= new Error('Proyecto no encontrado')
+        //     res.status(404).json({error: error.message})
+        //     return
+        // }
+
         try {
             await project.save(req.body)
             res.send('Proyecto Creado Correctamente')
