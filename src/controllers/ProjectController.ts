@@ -1,7 +1,7 @@
 import type {Request, Response} from 'express'
 import Project from '../models/Project'
 import { error } from 'node:console'
-
+//hola
 // un metodo estatico no requiere ser instanciado -class ProjectController tiene un getAllProjects en este caso seria un metodo
 
 export class ProjectController {
