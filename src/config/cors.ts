@@ -5,7 +5,12 @@ import {CorsOptions} from 'cors'
 
 export const corsConfig: CorsOptions = {
     origin: function(origin, callback){// origin es de donde se presenta la petición, en este caso desde la URL de react y callback, va a ser lo que va a permitir la conexión
+        //console.log(process.argv)//argv-son argumentos y lo guarda en un vector
+        //const whitelist = [process.env.FRONTEND_URL,process.env.BACKEND_URL]-colucion a cors -paso2 y final...paso 1 .env
         const whitelist = [process.env.FRONTEND_URL]//sintaxis de arrglo para utilizar un metodo de arrgle en el if
+        if(process.argv[2]==='--api'){
+            whitelist.push(undefined)//thunderClient y postman no tiene un origin como el navegador
+        }
         if(whitelist.includes(origin)){
             callback(null,true)
         }else{
