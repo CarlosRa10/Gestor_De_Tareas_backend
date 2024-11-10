@@ -1,13 +1,14 @@
-import mongoose,{Schema,Document} from "mongoose";
+import mongoose,{Schema,Document} from "mongoose";// constructores Schema y Document de Mongoose, que se utilizan para definir la estructura de los documentos en la base de datos
 
 //hereda Document
-export interface IUser extends Document{
+//estructura de un documento de usuario en MongoDB.
+export interface IUser extends Document{//esta interfaz hereda de Document, lo que significa que los documentos de usuario tendrán las características estándar de los documentos de MongoDB, como el _id generado automáticamente.
     email:string
     password:string
     name:string
     confirmed:boolean
 }
-
+// esquema del documento de usuario.
 const userSchema:Schema = new Schema({
     email:{
         type:String,
@@ -28,6 +29,6 @@ const userSchema:Schema = new Schema({
         default:false
     }
 })
-
+//creacion de modelo de usuario
 const User = mongoose.model<IUser>('User',userSchema)
 export default User
