@@ -18,8 +18,8 @@ const TokenSchema : Schema = new Schema({
     },
     createdAt:{
         type:Date,
-        default:Date.now(),//una vez que se genere el token esta sera la fecha por default
-        expires:'10m'
+        default:Date.now,//una vez que se genere el token esta sera la fecha por default
+        expires:'1d'
     },
 })
 

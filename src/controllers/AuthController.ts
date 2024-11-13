@@ -3,7 +3,8 @@ import User from '../models/User'
 import { hashPassword } from '../utils/auth'
 import { generateToken } from '../utils/token'
 import Token from '../models/Token'
-import { transporter } from '../config/nodemailer'
+import { AuthEmail } from '../emails/AuthEmail'
+
 
 export class AuthController{
     static createAccount = async(req:Request,res:Response)=>{
@@ -27,19 +28,38 @@ export class AuthController{
             token.token = generateToken()
             token.user = user.id
 
-           // Enviar Email
-            await transporter.sendMail({
-                from:'Club Crecimiento Tecnológico <clubcrecimientotecnologico@unihumboldt.edu.ve>',
-                to: user.email,
-                subject: 'Club Crecimiento Tecnológico - Confirma tu cuenta',
-                text: 'Club Crecimiento Tecnológico - Confirma tu cuenta',
-                html:`<p>Probando e-mail</p>`
+            //Enviar Email
+            AuthEmail.sendConfirmationEmail({
+                email:user.email,
+                name:user.name,
+                token:token.token
             })
 
             //await user.save()
             await Promise.allSettled([user.save(),token.save()])
             res.send('Cuenta creada, revisa tu email para confirmarla') 
         } catch (error) {//se hay error se envia una respuesta
+            res.status(500).json({error:'Hubo un error'})
+        }
+    }
+
+    static confirmAccount = async(req:Request,res:Response)=>{
+        try {
+           const {token} = req.body
+           console.log(token)
+           const tokenExists = await Token.findOne({token})
+           console.log(tokenExists)
+           if(!tokenExists){
+            const error = new Error('Token no válido')
+            res.status(401).json({error:error.message})
+            return
+           }
+           const user = await User.findById(tokenExists.user)
+           console.log(user)
+           user.confirmed = true
+           await Promise.allSettled([ user.save(),tokenExists.deleteOne() ])
+           res.send('Cuenta confirmada correctamente')
+        } catch (error) {
             res.status(500).json({error:'Hubo un error'})
         }
     }

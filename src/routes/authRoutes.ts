@@ -22,4 +22,11 @@ router.post('/create-account',
         handleInputErrors,//midleware
     AuthController.createAccount
 )
+
+router.post('/confirm-account',
+    body('token')//enviar token -validacion
+        .notEmpty().withMessage('El nombre no puede ir vacio'),
+    handleInputErrors,
+    AuthController.confirmAccount
+)
 export default router
