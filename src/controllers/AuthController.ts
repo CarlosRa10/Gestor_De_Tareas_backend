@@ -27,7 +27,7 @@ export class AuthController{
             token.token = generateToken()
             token.user = user.id
 
-            //Enviar Email
+           // Enviar Email
             await transporter.sendMail({
                 from:'Club Crecimiento Tecnológico <clubcrecimientotecnologico@unihumboldt.edu.ve>',
                 to: user.email,
