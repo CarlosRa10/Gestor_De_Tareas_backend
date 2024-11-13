@@ -3,6 +3,7 @@ import User from '../models/User'
 import { hashPassword } from '../utils/auth'
 import { generateToken } from '../utils/token'
 import Token from '../models/Token'
+import { transporter } from '../config/nodemailer'
 
 export class AuthController{
     static createAccount = async(req:Request,res:Response)=>{
@@ -25,6 +26,15 @@ export class AuthController{
             const token = new Token()
             token.token = generateToken()
             token.user = user.id
+
+            //Enviar Email
+            await transporter.sendMail({
+                from:'Club Crecimiento Tecnológico <clubcrecimientotecnologico@unihumboldt.edu.ve>',
+                to: user.email,
+                subject: 'Club Crecimiento Tecnológico - Confirma tu cuenta',
+                text: 'Club Crecimiento Tecnológico - Confirma tu cuenta',
+                html:`<p>Probando e-mail</p>`
+            })
 
             //await user.save()
             await Promise.allSettled([user.save(),token.save()])
