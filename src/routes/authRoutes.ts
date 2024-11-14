@@ -3,6 +3,9 @@ import {body} from 'express-validator'
 import { AuthController } from '../controllers/AuthController'
 import { handleInputErrors } from '../middleware/validation'
 const router = Router()
+
+//Endpoints
+
 router.post('/create-account',
     body('name')
         .notEmpty().withMessage('El nombre no puede ir vacio'),
@@ -29,4 +32,14 @@ router.post('/confirm-account',
     handleInputErrors,
     AuthController.confirmAccount
 )
+
+router.post('/login',
+    body('email')
+        .isEmail().withMessage('E-mail no válido'),
+        body('password')
+        .notEmpty().withMessage('El password no puede ir vacio'),
+    handleInputErrors,
+    AuthController.login
+)
+
 export default router
