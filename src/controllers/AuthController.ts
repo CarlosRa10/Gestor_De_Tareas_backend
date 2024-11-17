@@ -151,4 +151,37 @@ export class AuthController{
             res.status(500).json({error:'Hubo un error'})
         }
     }
+
+
+
+    static forgotPassword = async(req:Request,res:Response)=>{
+        try {
+            const {email} = req.body
+            //Usuario existente
+            const user = await User.findOne({email})//buscar un usuario por el campo de email
+            if(!user){
+                const error = new Error('El usuario no esta registrado')
+                res.status(404).json({error:error.message})
+                return
+            }
+        
+            //Generar Token
+            const token = new Token()
+            token.token = generateToken()
+            token.user = user.id
+            await token.save()
+
+            //Enviar Email
+            AuthEmail.sendPasswordResetToken({
+                email:user.email,
+                name:user.name,
+                token:token.token
+            })
+
+
+            res.send('Revisa tu email para instrucciones') 
+        } catch (error) {//se hay error se envia una respuesta
+            res.status(500).json({error:'Hubo un error'})
+        }
+    }
 }
