@@ -15,7 +15,7 @@ export class AuthController{
             if(userExists){
                 const error = new Error('El usuario ya esta registrado')
                 res.status(409).json({error:error.message})
-                return
+                
             }
             //res.send('desde /api/auth')
             //Crea un usuario
@@ -37,9 +37,11 @@ export class AuthController{
 
             //await user.save()
             await Promise.allSettled([user.save(),token.save()])
-            res.send('Cuenta creada, revisa tu email para confirmarla') 
+            res.send('Cuenta creada, revisa tu email para confirmarla')
+            return 
         } catch (error) {//se hay error se envia una respuesta
             res.status(500).json({error:'Hubo un error'})
+            return
         }
     }
 
@@ -59,8 +61,10 @@ export class AuthController{
            user.confirmed = true
            await Promise.allSettled([ user.save(),tokenExists.deleteOne() ])
            res.send('Cuenta confirmada correctamente')
+           return
         } catch (error) {
             res.status(500).json({error:'Hubo un error'})
+            return
         }
     }
 //Algoritmo para iniciar sesión
@@ -89,7 +93,8 @@ export class AuthController{
             })
 
                 const error = new Error('La cuenta no ha sido confirmada, hemos enviado un e-mail de confirmación')
-                res.status(401).json({error:error.message})         
+                res.status(401).json({error:error.message}) 
+                return        
             }
             console.log(user)
 
@@ -98,11 +103,15 @@ export class AuthController{
             console.log(isPasswordCorrect)
             if(!isPasswordCorrect){
                 const error = new Error('Password Incorrecto')
-                res.status(401).json({error:error.message})        
+                res.status(401).json({error:error.message})    
+                return    
             }
             res.send('Autenticado...')
+            
+            
         } catch (error) {
             res.status(500).json({error:'Hubo un error'})
+            return
         }
     }
 
@@ -120,6 +129,7 @@ export class AuthController{
             if(user.confirmed){
                 const error = new Error('El usuario ya esta confirmado')
                 res.status(403).json({error:error.message})
+                return
             }
         
             //Generar Token
