@@ -4,7 +4,7 @@ import { AuthController } from '../controllers/AuthController'
 import { handleInputErrors } from '../middleware/validation'
 const router = Router()
 
-//Endpoints
+//Endpoints del proyecto
 
 router.post('/create-account',
     body('name')
