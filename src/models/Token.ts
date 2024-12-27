@@ -16,12 +16,24 @@ const TokenSchema : Schema = new Schema({
         type:Types.ObjectId,
         ref:'User'//referencia es a que modelo va a encontrar esa información
     },
-    createdAt:{
+    expiresAt:{
         type:Date,
         default:Date.now,//una vez que se genere el token esta sera la fecha por default
-        expires:'1d'
+        expires:'10m'
     },
 })
 
 const Token = mongoose.model<IToken>('Token',TokenSchema)
 export default Token
+
+//  createdAt:{
+//     type:Date,
+//     default:Date.now,//una vez que se genere el token esta sera la fecha por default
+//     expires:'1d'
+// }
+
+// // createdAt:{
+//     type:Date,
+//     default:Date.now,//una vez que se genere el token esta sera la fecha por default
+//     expires:'1d'
+// }
