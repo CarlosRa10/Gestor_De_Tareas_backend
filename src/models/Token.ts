@@ -38,7 +38,7 @@ export default Token
 //     expires:'1d'
 // }
 
-//JSON Web Tokens
+//JSON Web Tokens - Para los usuarios 
 //Va a ser la forma en la que vamos a autenticar a nuestros usuarios en nuestras aplicaciones de react
 //Un JSON Web Token (JWT) es un estándar abierto que define un formato compacto y seguro para transmitir información entre dos partes de manera segura como un objeto JSON.
 //Consta de 3 partes 
