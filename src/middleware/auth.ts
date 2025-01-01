@@ -8,7 +8,9 @@ export const authenticate = async (req:Request, res:Response, next:NextFunction)
         res.status(401).json({error: error.message})
         return
     }
-    console.log(bearer)
+    //const token = bearer.split(' ')[1]
+    const [, token] = bearer.split(' ')
+    //console.log(token)
     next()
 }
 
