@@ -17,7 +17,9 @@ export class ProjectController {
         //     res.status(404).json({error: error.message})
         //     return
         // }
-        console.log(req.user)
+        //Asigna un manager
+        project.manager = req.user.id
+        //console.log(req.user)
         try {
             await project.save(req.body)
             res.send('Proyecto Creado Correctamente')

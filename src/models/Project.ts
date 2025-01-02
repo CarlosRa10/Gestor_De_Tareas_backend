@@ -1,6 +1,7 @@
 //modelos: la forma que va a tener los datos en tus bases de datos
 import mongoose, {Schema, Document, PopulatedDoc, Types} from "mongoose";
 import { ITask } from "./Task";
+import { IUser } from "./User";
 
 //Document: Este es un tipo que proviene generalmente de Mongoose (o de la biblioteca que estés usando). Representa un documento de MongoDB, lo que significa que este tipo ya incluye todos los métodos y propiedades que tiene un documento en la base de datos.
 //&: Este símbolo se usa para la intersección de tipos. Significa que ProjectType no solo es un Document, sino que también puede incluir propiedades adicionales que se definan en el objeto vacío {}.
@@ -17,6 +18,7 @@ export interface IProject extends Document  {
     clientName: string
     description: string
     tasks: PopulatedDoc<ITask & Document>[]//ITask-hace referencia a decirle que vamos a almacenar en esos subdocumentos y tambien tener la extencion o herencia de Document
+    manager: PopulatedDoc<IUser & Document>
 }
 
 
@@ -43,7 +45,11 @@ const ProjectSchema: Schema = new Schema({
             type: Types.ObjectId,
             ref: 'Task'
         }
-    ]
+    ],
+    manager: {
+        type: Types.ObjectId,
+        ref: 'User'
+    }
 },{timestamps:true})
 
 
