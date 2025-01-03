@@ -28,6 +28,7 @@ export const authenticate = async (req:Request, res:Response, next:NextFunction)
             //console.log(user)
             if(user){
                 req.user = user
+                next()
             }else{
                 res.status(500).json({error:'Token No Válido'})
             }
@@ -36,7 +37,6 @@ export const authenticate = async (req:Request, res:Response, next:NextFunction)
         res.status(500).json({error:'Token No Válido'})
     }
     //console.log(token)
-    next()
 }
 
 //Es una peticion htpp - primero va la URL, luego el header y despues el body
