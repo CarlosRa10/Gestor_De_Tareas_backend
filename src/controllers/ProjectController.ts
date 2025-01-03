@@ -1,6 +1,6 @@
 import type {Request, Response} from 'express'
 import Project from '../models/Project'
-import { error } from 'node:console'
+//import { error } from 'node:console'
 //hola
 // un metodo estatico no requiere ser instanciado -class ProjectController tiene un getAllProjects en este caso seria un metodo
 
@@ -30,7 +30,11 @@ export class ProjectController {
 
     static getAllProjects = async (req: Request, res: Response) => {
         try {
-            const projects = await Project.find({})
+            const projects = await Project.find({
+                $or: [
+                    {manager:{$in: req.user.id}}
+                ]
+            })
             res.json(projects)//como es una colección con multiples elementos lo retornamos como json
         } catch (error) {
             console.log(error)
@@ -48,6 +52,11 @@ export class ProjectController {
                 res.status(404).json({error: error.message})
                 return//// Solo si quieres salir después de enviar la respuesta
             }
+            if(project.manager.toString() !== req.user.id.toString() ){
+                const error= new Error('Acción no Válida')
+                res.status(404).json({error: error.message})
+                return
+            }
             res.json(project)// Enviar la respuesta pero no devolverla
         } catch (error) {
             console.log(error)
@@ -64,6 +73,11 @@ export class ProjectController {
                 const error= new Error('Proyecto no encontrado')//si quieres no se pone este codigo y solo el de abajo con esto ---res.status(404).json({ error: 'Proyecto no encontrado' });
                 res.status(404).json({error: error.message})
                 return//// Solo si quieres salir después de enviar la respuesta
+            }
+            if(project.manager.toString() !== req.user.id.toString() ){
+                const error= new Error('Solo el Manager puede actualizar un Proyecto')
+                res.status(404).json({error: error.message})
+                return
             }
             project.projectName = req.body.projectName
             project.clientName = req.body.clientName
@@ -86,6 +100,11 @@ export class ProjectController {
                 const error= new Error('Proyecto no encontrado')//si quieres no se pone este codigo y solo el de abajo con esto ---res.status(404).json({ error: 'Proyecto no encontrado' });
                 res.status(404).json({error: error.message})
                 return//// Solo si quieres salir después de enviar la respuesta
+            }
+            if(project.manager.toString() !== req.user.id.toString() ){
+                const error= new Error('Solo el Manager puede eliminar un Proyecto')
+                res.status(404).json({error: error.message})
+                return
             }
             await project.deleteOne()
             res.send('Proyecto Eliminado')

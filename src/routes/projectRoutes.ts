@@ -25,12 +25,15 @@ import { taskBelongsToProject, taskExists } from "../middleware/task";
 import { authenticate } from "../middleware/auth";
 
 const router = Router()
+
+router.use(authenticate)//Protege todos los endpoints que utilizan router
+
+
 //cuando se llama o abre projectRoutes cual es el metodo mandado a llamar - puedes tener varios metodos
 //manda a lammar el controldor y el metodo asociado a esa url
 //crear
 router.post('/',
     //Podemos hacer validacion en controladores pero vamos a dejarlo quieto para que solo tenga 1 accion
-    authenticate,
     body('projectName')
         .trim().notEmpty().withMessage('El Nombre del Proyecto es Obligatorio'),
     body('clientName')
