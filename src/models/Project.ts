@@ -19,6 +19,7 @@ export interface IProject extends Document  {
     description: string
     tasks: PopulatedDoc<ITask & Document>[]//ITask-hace referencia a decirle que vamos a almacenar en esos subdocumentos y tambien tener la extencion o herencia de Document
     manager: PopulatedDoc<IUser & Document>
+    team: PopulatedDoc<IUser & Document>[]
 }
 
 
@@ -49,7 +50,13 @@ const ProjectSchema: Schema = new Schema({
     manager: {
         type: Types.ObjectId,
         ref: 'User'
-    }
+    },
+    team:[
+        {
+            type: Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 },{timestamps:true})
 
 
