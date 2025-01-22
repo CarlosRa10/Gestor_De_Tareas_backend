@@ -43,3 +43,12 @@ export function taskBelongsToProject(req:Request,res:Response,next:NextFunction)
             }
             next()//Para que se vaya al siguiente middleware 
 }
+
+export function hasAuthorization(req:Request,res:Response,next:NextFunction) {
+            if(req.user.id.toString() !== req.project.manager.toString() ){
+                const error = new Error('Accion no válida')
+                res.status(400).json({error:error.message})
+                return
+            }
+            next()
+}

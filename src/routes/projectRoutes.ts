@@ -21,7 +21,7 @@ import { ProjectController } from "../controllers/ProjectController";
 import { handleInputErrors } from "../middleware/validation";
 import { TaskController } from "../controllers/TaskController";
 import { projectExists } from "../middleware/project";
-import { taskBelongsToProject, taskExists } from "../middleware/task";
+import { hasAuthorization, taskBelongsToProject, taskExists } from "../middleware/task";
 import { authenticate } from "../middleware/auth";
 import { TeamMemberController } from "../controllers/TeamController";
 
@@ -82,7 +82,9 @@ router.delete('/:id',//Este fragmento de código define una ruta GET en un route
 //tasks: Indica que se está trabajando con el recurso "tareas" dentro del contexto de un proyecto específico.
 
 router.param('projectId',projectExists)//toma el nombre del parametro y de segundo un handle o funcion que se encarga de procesar siempre que exista el primer parametro 
+
 router.post('/:projectId/tasks',//peticion hacia esta url--- La clave está en la estructura de la ruta de la solicitud. Al incluir :projectId en la ruta, se indica al framework que ese valor será extraído y colocado en el objeto req.params.
+    hasAuthorization,
     body('name')
         .trim().notEmpty().withMessage('El Nombre de la tarea es Obligatorio'),
     body('description')
@@ -97,6 +99,7 @@ router.get('/:projectId/tasks',
 
 router.param('taskId', taskExists)// en las rutas donde hay un taskId, que remos ejecutar el segundo parametro o siguiente handle
 router.param('taskId', taskBelongsToProject)
+
 router.get('/:projectId/tasks/:taskId',// estos 3 endpoint tiene como parametro el proyecto y se valida de que el proyecto exista 
     param('taskId').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
     handleInputErrors,
@@ -105,6 +108,7 @@ router.get('/:projectId/tasks/:taskId',// estos 3 endpoint tiene como parametro 
 
 
 router.put('/:projectId/tasks/:taskId',
+    hasAuthorization,
     param('taskId').isMongoId().withMessage('ID no válido'),
     body('name')
         .trim().notEmpty().withMessage('El Nombre de la tarea es Obligatorio'),
@@ -116,6 +120,7 @@ router.put('/:projectId/tasks/:taskId',
 
 
 router.delete('/:projectId/tasks/:taskId',
+    hasAuthorization,
     param('taskId').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
     handleInputErrors,
     TaskController.deleteTask
