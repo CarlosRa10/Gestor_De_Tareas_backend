@@ -17,6 +17,7 @@ export interface ITask extends Document  {
     description: string
     project:Types.ObjectId
     status: taskStatus
+    completedBy:Types.ObjectId
 }
 
 export const TaskSchema : Schema = new Schema({
@@ -38,6 +39,11 @@ export const TaskSchema : Schema = new Schema({
         type: String,
         enum: Object.values(taskStatus),
         default: taskStatus.PENDING//cuando creamos la tarea, le creamos un estado de pendiente. porque recien creada es mentira que alguien hizo la tarea
+    },
+    completedBy:{
+        type: Types.ObjectId,
+        ref:'User',
+        default: null
     }
 
 },{timestamps:true})//timestamps-registra cuando fue la ultima actualización
