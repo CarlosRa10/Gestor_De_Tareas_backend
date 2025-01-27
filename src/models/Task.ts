@@ -17,7 +17,10 @@ export interface ITask extends Document  {
     description: string
     project:Types.ObjectId
     status: taskStatus
-    completedBy:Types.ObjectId
+    completedBy: {
+        user:Types.ObjectId,
+        status:taskStatus
+    }[]
 }
 
 export const TaskSchema : Schema = new Schema({
@@ -40,11 +43,20 @@ export const TaskSchema : Schema = new Schema({
         enum: Object.values(taskStatus),
         default: taskStatus.PENDING//cuando creamos la tarea, le creamos un estado de pendiente. porque recien creada es mentira que alguien hizo la tarea
     },
-    completedBy:{
-        type: Types.ObjectId,
-        ref:'User',
-        default: null
-    }
+    completedBy:[
+        {
+            user:{
+                type: Types.ObjectId,
+                ref:'User',
+                default: null
+            },
+            status:{
+                type: String,
+                enum: Object.values(taskStatus),
+                default: taskStatus.PENDING
+            }
+        }
+    ]
 
 },{timestamps:true})//timestamps-registra cuando fue la ultima actualización
 //conexion de schema con el interface('Nombre del modelo que le quieras poner', TaskSchema)
