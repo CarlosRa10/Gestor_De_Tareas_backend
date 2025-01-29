@@ -24,6 +24,7 @@ import { projectExists } from "../middleware/project";
 import { hasAuthorization, taskBelongsToProject, taskExists } from "../middleware/task";
 import { authenticate } from "../middleware/auth";
 import { TeamMemberController } from "../controllers/TeamController";
+import { NoteController } from "../controllers/NoteController";
 
 const router = Router()
 
@@ -97,8 +98,8 @@ router.get('/:projectId/tasks',
     TaskController.getProjectTasks
 )
 
-router.param('taskId', taskExists)// en las rutas donde hay un taskId, que remos ejecutar el segundo parametro o siguiente handle
-router.param('taskId', taskBelongsToProject)
+router.param('taskId', taskExists)// en las rutas donde hay un taskId, queremos ejecutar el segundo parametro o siguiente handle -revisa si la tarea existe
+router.param('taskId', taskBelongsToProject)// revisa si pertenece a ese proyecto
 
 router.get('/:projectId/tasks/:taskId',// estos 3 endpoint tiene como parametro el proyecto y se valida de que el proyecto exista 
     param('taskId').isMongoId().withMessage('ID no válido'),//param('id') especifica que se está validando el parámetro id de la ruta.-isMongoId() verifica que el valor de id sea un identificador válido de MongoDB.Esto es importante porque MongoDB utiliza un formato específico para sus IDs
@@ -159,6 +160,15 @@ router.delete('/:projectId/team/:userId',
         .isMongoId().withMessage('ID no válido'),
         handleInputErrors,
         TeamMemberController.removeMemberById
+)
+
+//Routes para las Notes
+
+router.post('/:projectId/tasks/:taskId/notes',
+    body('content')
+        .notEmpty().withMessage('El contenido de la nota es obligatorio'),
+    handleInputErrors,
+    NoteController.createNote
 )
 
 //Nested Resource Routing-Enrutamiento de Recursos Anidados
