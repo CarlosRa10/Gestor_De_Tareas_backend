@@ -21,6 +21,7 @@ export interface ITask extends Document  {
         user:Types.ObjectId,
         status:taskStatus
     }[]
+    notes: Types.ObjectId[]
 }
 
 export const TaskSchema : Schema = new Schema({
@@ -55,6 +56,12 @@ export const TaskSchema : Schema = new Schema({
                 enum: Object.values(taskStatus),
                 default: taskStatus.PENDING
             }
+        }
+    ],
+    notes:[
+        {
+            type: Types.ObjectId,
+            ref:'Note'
         }
     ]
 
