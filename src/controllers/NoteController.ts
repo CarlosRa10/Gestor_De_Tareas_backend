@@ -18,6 +18,16 @@ export class NoteController {
             await Promise.allSettled([req.task.save(), note.save()])
             res.send('Nota Creada Correctamente')
         } catch (error) {
+            res.status(500).json({error:'Hubo un error'})//Error de servidor
+        }
+    }
+
+    static getTaskNotes = async (req:Request,res:Response)=>{
+        //console.log('getTaskNotes')
+        try {
+            const notes = await Note.find({task: req.task.id})
+            res.json(notes)
+        } catch (error) {
             res.status(500).json({error:'Hubo un error'})
         }
     }
