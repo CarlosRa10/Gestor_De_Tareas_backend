@@ -176,6 +176,11 @@ router.get('/:projectId/tasks/:taskId/notes',
     NoteController.getTaskNotes
 )
 
+router.delete('/:projectId/tasks/:taskId/notes/:noteId',
+    param('noteId').isMongoId().withMessage('ID No Válido'),
+    handleInputErrors,
+    NoteController.deleteNote
+)
 
 //Nested Resource Routing-Enrutamiento de Recursos Anidados
 //Es un patrón de diseño en la construccion de URLs para APIs, especialmente en APIs RESTful, donde las relaciones jerárquicas entre recursos son expresadas en la estructura de la URL. 
