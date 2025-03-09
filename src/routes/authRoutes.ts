@@ -86,4 +86,10 @@ router.get('/user',
     AuthController.user
 )
 
+//Profile
+router.put('/profile',
+    
+    AuthController.updateProfile
+)
+
 export default router
