@@ -6,7 +6,7 @@ import Token from '../models/Token'
 import { AuthEmail } from '../emails/AuthEmail'
 import { generateJWT } from '../utils/jwt'
 
-//controladores de la autenticación
+//controladores de la autenticación que se comunica con el modelo y la vista
 export class AuthController{
     static createAccount = async(req:Request,res:Response)=>{
         try {
