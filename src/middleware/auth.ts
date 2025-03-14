@@ -13,6 +13,7 @@ declare global {
 export const authenticate = async (req:Request, res:Response, next:NextFunction) => {
     console.log(req.headers.authorization)
     const bearer = req.headers.authorization
+    console.log("Token recibido en el backend:", bearer);
     if(!bearer){
         console.log(bearer)
         const error = new Error('No Autorizado')
@@ -23,6 +24,7 @@ export const authenticate = async (req:Request, res:Response, next:NextFunction)
     const [, token] = bearer.split(' ')
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        console.log("Token decodificado:", decoded)
         //console.log(decoded)
         if(typeof decoded === 'object' && decoded.id){
             const user = await User.findById(decoded.id).select('_id name email')
@@ -31,10 +33,12 @@ export const authenticate = async (req:Request, res:Response, next:NextFunction)
                 req.user = user
                 next()
             }else{
+                console.log("Usuario no encontrado en la base de datos")
                 res.status(500).json({error:'Token No Válido'})
             }
         }
     } catch (error) {
+        console.log("Error al verificar el token:", error)
         res.status(500).json({error:'Token No Válido'})
     }
     //console.log(token)
