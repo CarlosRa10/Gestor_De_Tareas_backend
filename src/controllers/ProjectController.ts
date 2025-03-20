@@ -23,6 +23,7 @@ export class ProjectController {
         try {
             await project.save(req.body)
             res.send('Proyecto Creado Correctamente')
+            return
         } catch (error) {
             console.log(error)
         }
@@ -59,9 +60,11 @@ export class ProjectController {
                 return
             }
             res.json(project)// Enviar la respuesta pero no devolverla
+            return
         } catch (error) {
             console.log(error)
             res.status(500).json({ error: 'Server Error' }); // Asegurarse de manejar el error con un mensaje
+            return
         }
     }
 
@@ -85,9 +88,11 @@ export class ProjectController {
             project.description = req.body.description
             await project.save()
             res.send('Proyecto Actualizado')
+            return
         } catch (error) {
             console.log(error)
             res.status(500).json({ error: 'Server Error' }); // Asegurarse de manejar el error con un mensaje
+            return
         }
     }
 
@@ -109,9 +114,11 @@ export class ProjectController {
             }
             await project.deleteOne()
             res.send('Proyecto Eliminado')
+            return
         } catch (error) {
             console.log(error)
             res.status(500).json({ error: 'Server Error' }); // Asegurarse de manejar el error con un mensaje
+            return
         }
     }
 }

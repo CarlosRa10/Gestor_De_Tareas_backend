@@ -12,8 +12,10 @@ export class TaskController{
             req.project.tasks.push(task.id)
             await Promise.allSettled([task.save(), req.project.save()]) //es un codigo que se ejecuta si todos los promises se cumple- si no te da errores 
             res.send('Tarea creada correctamente')
+            return
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
+            return
         }
      
     }
@@ -23,8 +25,10 @@ export class TaskController{
         try {
             const tasks = await Task.find({project:req.project.id}).populate('project')//tienes que ver las referencias en tus modelos, para cuando hagas cruce con un populate sepa a donde tiene que ir a traerse esa información
             res.json(tasks)
+            return
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
+            return
         }
      
     }
@@ -36,8 +40,10 @@ export class TaskController{
                             .populate({path:'completedBy.user', select:'id name email' })
                             .populate({path:'notes', populate:{path:'createdBy', select:'id name email'}})
             res.json(task)
+            return
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
+            return
         }
      
     }
@@ -50,8 +56,10 @@ export class TaskController{
             req.task.description = req.body.description
             await req.task.save()
             res.send("Tarea Actualizada Correctamente")
+            return
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
+            return
         }
      
     }
@@ -65,8 +73,10 @@ export class TaskController{
             // await req.project.save()
             await Promise.allSettled([req.task.deleteOne(),req.project.save()])
             res.send("Tarea Eliminada Correctamente")
+            return
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
+            return
         }
      
     }
@@ -86,8 +96,10 @@ export class TaskController{
             req.task.completedBy.push(data)
             await req.task.save()
             res.send('Tarea Actualizada')
+            return
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
+            return
         }
      
     }

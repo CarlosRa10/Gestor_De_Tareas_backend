@@ -22,8 +22,10 @@ export class NoteController {
         try {
             await Promise.allSettled([req.task.save(), note.save()])
             res.send('Nota Creada Correctamente')
+            return
         } catch (error) {
             res.status(500).json({error:'Hubo un error'})//Error de servidor
+            return
         }
     }
 
@@ -32,8 +34,10 @@ export class NoteController {
         try {
             const notes = await Note.find({task: req.task.id})
             res.json(notes)
+            return
         } catch (error) {
             res.status(500).json({error:'Hubo un error'})
+            return
         }
     }
 
@@ -59,6 +63,7 @@ export class NoteController {
             res.send('Nota Eliminada')
         } catch (error) {
             res.status(500).json({error:'Hubo un error'})
+            return
         }
     }
 }

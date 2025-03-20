@@ -13,6 +13,7 @@ export class TeamMemberController{
             return
         }
         res.json(user)
+        return
     }
 
     static getProjectTeam = async (req:Request,res:Response)=>{
@@ -22,6 +23,7 @@ export class TeamMemberController{
         })
 
         res.json(project.team)
+        return
     }
 
     static addMemberById = async (req:Request,res:Response)=>{
@@ -43,6 +45,7 @@ export class TeamMemberController{
         req.project.team.push(user.id)
         await req.project.save()
         res.send('Usuario agregado correctamente')
+        return
     }
 
     static removeMemberById = async (req:Request,res:Response)=>{
@@ -58,6 +61,7 @@ export class TeamMemberController{
 
         await req.project.save()
         res.send('Usuario eliminado correctamente')
+        return
     }
 
 }
