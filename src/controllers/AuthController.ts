@@ -16,6 +16,7 @@ export class AuthController{
             if(userExists){
                 const error = new Error('El usuario ya esta registrado')
                 res.status(409).json({error:error.message})
+                return
                 
             }
             //res.send('desde /api/auth')
@@ -79,7 +80,8 @@ export class AuthController{
             const user = await User.findOne({email})
             if(!user){
                 const error = new Error('Usuario no encontrado')
-                res.status(404).json({error:error.message})         
+                res.status(404).json({error:error.message})
+                return         
             }
             if(!user.confirmed){
                 const token = new Token()
@@ -109,6 +111,7 @@ export class AuthController{
             }
             const token = generateJWT({id: user.id})
             res.send(token)
+            return
             
             
         } catch (error) {
@@ -149,8 +152,10 @@ export class AuthController{
             //await user.save()
             await Promise.allSettled([user.save(),token.save()])
             res.send('Se envió un nuevo token a tu email') 
+            return
         } catch (error) {//se hay error se envia una respuesta
             res.status(500).json({error:'Hubo un error'})
+            return
         }
     }
 
@@ -184,6 +189,7 @@ export class AuthController{
             res.send('Revisa tu email para instrucciones') 
         } catch (error) {//se hay error se envia una respuesta
             res.status(500).json({error:'Hubo un error'})
+            return
         }
     }
 
@@ -200,6 +206,7 @@ export class AuthController{
             res.send('Token válido, Define tu nuevo password')
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
+            return
         }
     }
 
@@ -219,13 +226,16 @@ export class AuthController{
 
             await Promise.allSettled([user.save(),tokenExists.deleteOne()])
             res.send('El password se modificó correctamente')
+            return
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
+            return
         }
     }
 
     static user = async (req: Request, res: Response) => {
         res.json(req.user)
+        return
         
     }
 
@@ -242,8 +252,10 @@ export class AuthController{
         try {
             await req.user.save()
             res.send('Perfil Actualizado correctamente')
+            return
         } catch (error) {
             res.status(500).send('Hubo un error')
+            return
         }
     }
 
@@ -254,13 +266,16 @@ export class AuthController{
         if(!isPasswordCorrect){
             const error = new Error('El password actual es incorrecto')
             res.status(401).json({error:error.message})
+            return
         }
         try {
             user.password = await hashPassword(password)
             await user.save()
             res.send('El password se modificó correctamente')
+            return
         } catch (error) {
             res.status(500).json({ error: 'Hubo un error' })
+            return
         }
     }
 
@@ -271,7 +286,9 @@ export class AuthController{
         if(!isPasswordCorrect){
             const error = new Error('El password es incorrecto')
             res.status(401).json({error:error.message})
+            return
         }
         res.send('Password Correcto')
+        return
     }
 }
