@@ -1,7 +1,8 @@
 //modelos: la forma que va a tener los datos en tus bases de datos
 import mongoose, {Schema, Document, PopulatedDoc, Types} from "mongoose";
-import { ITask } from "./Task";
+import Task, { ITask } from "./Task";
 import { IUser } from "./User";
+import Note from "./Notes";
 
 //Document: Este es un tipo que proviene generalmente de Mongoose (o de la biblioteca que estés usando). Representa un documento de MongoDB, lo que significa que este tipo ya incluye todos los métodos y propiedades que tiene un documento en la base de datos.
 //&: Este símbolo se usa para la intersección de tipos. Significa que ProjectType no solo es un Document, sino que también puede incluir propiedades adicionales que se definan en el objeto vacío {}.
@@ -59,6 +60,17 @@ const ProjectSchema: Schema = new Schema({
     ]
 },{timestamps:true})
 
+//Middleware - funciones que se jecutan despues o antes que ocurra cierta acción
+ProjectSchema.pre('deleteOne',{document:true},async function () {//eliminamos proyecto
+    const projectId = this._id//aqui recuperamos el id
+    if(!projectId) return
+    const tasks = await Task.find({project:projectId})//traemos las tareas relacionadas con el proyecto
+    for(const task of tasks){//iteramos sobre cada tarea
+        await Note.deleteMany({task: task.id})//eliminamos las notas que estamos iterando
+    }
+    await Task.deleteMany({project:projectId})
+    //console.log(this._id)
+})
 
 //Para conectarse-- definimos nuestro modelo y se registra en la instancia de mongoose
 // con el metodo model estamos agregando un modelo a la instancia de momgoose
