@@ -70,23 +70,11 @@ export class ProjectController {
 
 
     static updateProject = async (req: Request, res: Response): Promise<void> => {
-        const {id} = req.params
         try {
-            const project = await  Project.findById(id)//toma como segundo parametro req.body, es decir lo que le estmos pasando el json que se ve en thunderClient y en automatico va a suscribir el registro y lo guardamos
-            if(!project){
-                const error= new Error('Proyecto no encontrado')//si quieres no se pone este codigo y solo el de abajo con esto ---res.status(404).json({ error: 'Proyecto no encontrado' });
-                res.status(404).json({error: error.message})
-                return//// Solo si quieres salir después de enviar la respuesta
-            }
-            if(project.manager.toString() !== req.user.id.toString() ){
-                const error= new Error('Solo el Manager puede actualizar un Proyecto')
-                res.status(404).json({error: error.message})
-                return
-            }
-            project.projectName = req.body.projectName
-            project.clientName = req.body.clientName
-            project.description = req.body.description
-            await project.save()
+            req.project.projectName = req.body.projectName
+            req.project.clientName = req.body.clientName
+            req.project.description = req.body.description
+            await req.project.save()
             res.send('Proyecto Actualizado')
             return
         } catch (error) {
@@ -98,21 +86,8 @@ export class ProjectController {
 
 
     static deleteProject = async (req: Request, res: Response): Promise<void> => {
-        const {id} = req.params
         try {
-            const project = await  Project.findById(id)//const project = await  Project.findByIdAndDelete(id)
-            //console.log(project)
-            if(!project){
-                const error= new Error('Proyecto no encontrado')//si quieres no se pone este codigo y solo el de abajo con esto ---res.status(404).json({ error: 'Proyecto no encontrado' });
-                res.status(404).json({error: error.message})
-                return//// Solo si quieres salir después de enviar la respuesta
-            }
-            if(project.manager.toString() !== req.user.id.toString() ){
-                const error= new Error('Solo el Manager puede eliminar un Proyecto')
-                res.status(404).json({error: error.message})
-                return
-            }
-            await project.deleteOne()
+            await req.project.deleteOne()
             res.send('Proyecto Eliminado')
             return
         } catch (error) {
