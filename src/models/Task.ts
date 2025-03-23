@@ -1,5 +1,6 @@
 //Creando modelos para las Tareas-Task
 import mongoose, {Schema, Document, Types} from "mongoose";
+import Note from "./Notes";
 //objeto o diccionario
 const taskStatus = {
     PENDING:'pending',
@@ -66,6 +67,16 @@ export const TaskSchema : Schema = new Schema({
     ]
 
 },{timestamps:true})//timestamps-registra cuando fue la ultima actualización
+
+//Middleware - funciones que se jecutan despues o antes que ocurra cierta acción
+TaskSchema.pre('deleteOne',{document:true},async function () {
+    const taskId = this._id
+    if(!taskId) return
+    await Note.deleteMany({task:taskId})
+    //console.log(this._id)
+})
+
+
 //conexion de schema con el interface('Nombre del modelo que le quieras poner', TaskSchema)
 const Task = mongoose.model<ITask>('Task', TaskSchema)
 export default Task
