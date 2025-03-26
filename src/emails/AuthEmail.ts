@@ -12,7 +12,7 @@ export class AuthEmail {
     static sendConfirmationEmail = async(user:IEmail)=>{
             // Enviar Email
         const info = await transporter.sendMail({
-            from:'Club Crecimiento Tecnológico <clubcrecimientotecnologico@unihumboldt.edu.ve>',
+            from: process.env.EMAIL_FROM,
             to: user.email,
             subject: 'Club Crecimiento Tecnológico - Confirma tu cuenta',
             text: 'Club Crecimiento Tecnológico - Confirma tu cuenta',
