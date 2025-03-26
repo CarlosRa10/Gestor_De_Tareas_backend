@@ -25,7 +25,7 @@ export class AuthEmail {
     static sendPasswordResetToken = async(user:IEmail)=>{
         // Enviar Email
     const info = await transporter.sendMail({
-        from:'Club Crecimiento Tecnológico <clubcrecimientotecnologico@unihumboldt.edu.ve>',
+        from: process.env.EMAIL_FROM,
         to: user.email,
         subject: 'Restablece Tu Password',
         text: 'Restablece Tu Password',
