@@ -17,7 +17,7 @@
 
 // // Looking to send emails in production? Check out our Email API/SMTP product!
 // //cada vez que se envia un email se tiene que llamar esta función
-// export const transporter = nodemailer.createTransport(config());//cada vez que se llame transporter, cargara las configuraciones con el createTransport
+export const transporter = nodemailer.createTransport(config());//cada vez que se llame transporter, cargara las configuraciones con el createTransport
 
 // import nodemailer from 'nodemailer';
 // import dotenv from 'dotenv';
