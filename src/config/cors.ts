@@ -19,36 +19,69 @@
 //     }
 // }
 
+// import { CorsOptions } from 'cors';
+
+
+
+// export const corsConfig: CorsOptions = {
+
+//   origin: (origin, callback) => {
+
+//     const whitelist = [process.env.FRONTEND_URL];
+
+
+
+//     if (process.argv[2] === '--api') {
+
+//       whitelist.push(undefined, null); // Permitir solicitudes sin origen (Postman, etc.)
+
+//     }
+
+
+
+//     if (!origin || whitelist.includes(origin)) {
+
+//       callback(null, true); // Permitir acceso
+
+//     } else {
+
+//       callback(new Error('Error de CORS: origen no permitido')); // Bloquear acceso
+
+//     }
+
+//   },
+
+// };
+
+
 import { CorsOptions } from 'cors';
 
-
-
 export const corsConfig: CorsOptions = {
-
   origin: (origin, callback) => {
+    const allowedOrigins = [
+      'https://gestor-de-tareas-gamma.vercel.app',
+      'https://gestor-de-tareas-git-master-carlosra10s-projects.vercel.app',
+      /https:\/\/gestor-de-tareas-.*\.vercel\.app/, // Regex para todos los subdominios
+      'http://localhost:3000'
+    ];
 
-    const whitelist = [process.env.FRONTEND_URL];
+    // Permitir solicitudes sin origen (Postman, etc.)
+    if (!origin) return callback(null, true);
 
+    // Verificación flexible
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') {
+        return origin === allowed;
+      }
+      return allowed.test(origin); // Para regex
+    });
 
-
-    if (process.argv[2] === '--api') {
-
-      whitelist.push(undefined, null); // Permitir solicitudes sin origen (Postman, etc.)
-
-    }
-
-
-
-    if (!origin || whitelist.includes(origin)) {
-
-      callback(null, true); // Permitir acceso
-
+    if (isAllowed) {
+      callback(null, true);
     } else {
-
-      callback(new Error('Error de CORS: origen no permitido')); // Bloquear acceso
-
+      console.error('Origen bloqueado:', origin, 'Permitidos:', allowedOrigins);
+      callback(new Error('Error de CORS: origen no permitido'));
     }
-
   },
-
+  credentials: true
 };
