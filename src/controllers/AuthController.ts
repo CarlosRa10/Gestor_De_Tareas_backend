@@ -50,16 +50,16 @@ export class AuthController{
     static confirmAccount = async(req:Request,res:Response)=>{
         try {
            const {token} = req.body
-           console.log(token)
+           //console.log(token)
            const tokenExists = await Token.findOne({token})
-           console.log(tokenExists)
+           //console.log(tokenExists)
            if(!tokenExists){
             const error = new Error('Token no válido')
             res.status(404).json({error:error.message})
             return
            }
            const user = await User.findById(tokenExists.user)
-           console.log(user)
+           //console.log(user)
            user.confirmed = true
            await Promise.allSettled([ user.save(),tokenExists.deleteOne() ])
            res.send('Cuenta confirmada correctamente')
@@ -99,11 +99,11 @@ export class AuthController{
                 res.status(401).json({error:error.message}) 
                 return        
             }
-            console.log(user)
+            //console.log(user)
 
             //Revisar Password
             const isPasswordCorrect = await checkPassword(password,user.password)
-            console.log(isPasswordCorrect)
+            //console.log(isPasswordCorrect)
             if(!isPasswordCorrect){
                 const error = new Error('Password Incorrecto')
                 res.status(401).json({error:error.message})    

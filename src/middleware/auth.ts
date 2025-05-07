@@ -11,11 +11,11 @@ declare global {
 }
 
 export const authenticate = async (req:Request, res:Response, next:NextFunction) => {
-    console.log(req.headers.authorization)
+    //console.log(req.headers.authorization)
     const bearer = req.headers.authorization
-    console.log("Token recibido en el backend:", bearer);
+    //console.log("Token recibido en el backend:", bearer);
     if(!bearer){
-        console.log(bearer)
+        //console.log(bearer)
         const error = new Error('No Autorizado')
         res.status(401).json({error: error.message})
         return
@@ -24,7 +24,7 @@ export const authenticate = async (req:Request, res:Response, next:NextFunction)
     const [, token] = bearer.split(' ')
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        console.log("Token decodificado:", decoded)
+        //console.log("Token decodificado:", decoded)
         //console.log(decoded)
         if(typeof decoded === 'object' && decoded.id){
             const user = await User.findById(decoded.id).select('_id name email')
