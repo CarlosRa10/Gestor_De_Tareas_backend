@@ -62,7 +62,8 @@ export const corsConfig: CorsOptions = {
       'https://gestor-de-tareas-gamma.vercel.app',
       'https://gestor-de-tareas-git-master-carlosra10s-projects.vercel.app',
       /https:\/\/gestor-de-tareas-.*\.vercel\.app/, // Regex para todos los subdominios
-      'http://localhost:3000'
+      'http://localhost:3000',
+      'http://localhost:5173'
     ];
 
     // Permitir solicitudes sin origen (Postman, etc.)
